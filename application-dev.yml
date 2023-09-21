@@ -1,0 +1,141 @@
+server:
+  port: 8681
+  undertow:
+    accesslog:
+      dir: /opt/logs
+      enabled: true
+      pattern: combined
+    io-threads: 4
+    worker-threads: 512
+  gray:
+    userCodeList: 123
+    version: v1
+management:
+  add-application-context-header: false
+  context-path: /actuator
+  port: 8691
+  security:
+    enabled: false
+ribbon:
+  ConnectTimeout: 10000
+  MaxConnectionsPerHost: 2000
+  MaxTotalConnections: 8000
+  ReadTimeout: 20000
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://admin:tAjX@10.64.3.169:8781/eureka/
+  instance:
+    prefer-ip-address: true
+jwt:
+  secret: sanyabcvdr
+
+task:
+  secretKey: 64350651e51701f061c0972a3145141c
+zuul:
+  host:
+    connect-timeout-millis: 10000
+    max-per-route-connections: 2000
+    max-total-connections: 8000
+    socket-timeout-millis: 10000
+  semaphore:
+    max-semaphores: 2000
+  routes:
+    admin:
+      path: /admin/**
+      serviceId: sany-cloud-admin
+    sale:
+      path: /sale/**
+      sensitiveHeaders: Access-Control-Allow-Origin,Access-Control-Allow-Methods
+      serviceId: sany-service-sale
+
+spring:
+  redis:
+    lettuce:
+      pool:
+        max-active:  100 # 连接池最大连接数（使用负值表示没有限制）
+        max-idle: 100 # 连接池中的最大空闲连接
+        min-idle: 50 # 连接池中的最小空闲连接
+        max-wait: 6000 # 连接池最大阻塞等待时间（使用负值表示没有限制）
+    cluster:
+      nodes:
+        - 10.64.18.11:6379
+        - 10.64.18.11:6380
+        - 10.64.18.12:6379
+        - 10.64.18.12:6380
+        - 10.64.18.13:6379
+        - 10.64.18.13:6380
+      max-redirects: 5
+    timeout: 300000
+    password: Ppqpsrj49%S
+  datasource:
+    druid:
+      webStatFilter:
+        enabled: true
+      statViewServlet:
+        enabled: true
+        # 设置白名单，不填则允许所有访问
+        allow:
+        url-pattern: /monitor/druid/*
+      filter:
+        stat:
+          enabled: true
+          # 慢SQL记录
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: true
+        wall:
+          config:
+            multi-statement-allow: true
+    # 主库数据源
+    master:
+      type: com.alibaba.druid.pool.DruidDataSource
+      driverClassName: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://mysql52703594.sanyvdr.com.cn:3306/sanylocation?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false
+      username: sanyvdrlocation
+      password: Sanyvdrlocation_20200820
+      # 初始连接数
+      initialSize: 5
+      # 最小连接池数量
+      minIdle: 10
+      # 最大连接池数量
+      maxActive: 20
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      # 配置一个连接在池中最大生存的时间，单位是毫秒
+      maxEvictableIdleTimeMillis: 2000000
+      # 配置检测连接是否有效
+      validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+    # 从库数据源
+    slave:
+      enabled: true
+      type: com.alibaba.druid.pool.DruidDataSource
+      # 从数据源开关/默认关闭
+      driverClassName: oracle.jdbc.driver.OracleDriver
+      url: jdbc:oracle:thin:@(description=(address_list=(load_balance=off)(failover=on)(address=(protocol=tcp)(host=bpmvdrclbs02.sany.com.cn)(port=1521))(address=(protocol=tcp)(host=bpmvdrclbs01.sany.com.cn)(port=1521)))(connect_data=(service_name=BPMVDR)(failover_mode=(type=select)(method=basic)(RETRIES=180)(DELAY=5))))
+      username: GSPMOD
+      password: G5pn!v#548(_2021
+      # 初始连接数
+      initialSize: 5
+      # 最小连接池数量
+      minIdle: 10
+      # 最大连接池数量
+      maxActive: 20
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      # 配置一个连接在池中最大生存的时间，单位是毫秒
+      maxEvictableIdleTimeMillis: 2000000
+      testWhileIdle: false
+      testOnBorrow: false
+      testOnReturn: false
